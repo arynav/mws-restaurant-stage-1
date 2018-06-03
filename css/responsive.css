@@ -1,0 +1,80 @@
+img, embed, object, video {
+    max-width: 100%;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+  }
+
+.box {
+    width: 100%;
+}
+@media screen and (max-width: 450px){
+
+    nav h1 a {
+        font-size: 10pt;
+    }
+    #restaurant-name, #reviews-container h2 {
+        font-size: 16pt;
+    }
+
+}
+@media screen and (min-width: 450px)  and (max-width: 589px){
+
+    .container {
+      width: 440px;
+    }
+} 
+
+@media screen and (min-width: 590px) {
+    .box{
+      width: 42%;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .box{
+      width: 28%;
+    }
+}
+
+
+@media screen and (min-width: 1200px) {
+
+    .container {
+      width: 1200px;   
+    }
+} 
+
+/* ===================== Restaurant review page ===================== */
+
+.container1 {
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+  }
+.r-box {
+    width: 100%;
+}
+
+@media screen and (min-width: 800px) {
+    .r-box{
+      width: 50%;
+    }
+    #restaurant-hours td, #restaurant-address {
+        padding: 0 10px 10px 40px;
+        margin: 0;
+    }
+    #restaurant-address {
+        font-size: 14pt;
+    }
+ 
+}
+@media screen and (min-width: 1000px) {
+
+    .container1 {
+      width: 1000px;   
+    }
+} 
