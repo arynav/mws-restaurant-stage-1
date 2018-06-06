@@ -72,9 +72,9 @@ img, embed, object, video {
     }
  
 }
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 1300px) {
 
     .container1 {
-      width: 1000px;   
+      width: 1300px;   
     }
 } 

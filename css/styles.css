@@ -106,6 +106,19 @@ nav h1 a {
     color: #01447e;
     text-decoration: underline;
 }
+/* Add skip link to skip google map on tab focus */
+.skip-link {
+  position: absolute;
+  background-color: rgb(26, 27, 27);
+  padding: 4px;
+  top: -40px; 
+  left: 0;
+  z-index: 100;
+}
+.skip-link:focus {
+  top: 0;
+}
+
 /* ====================== Map ====================== */
 #map {
   height: 400px;
