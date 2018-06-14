@@ -13,25 +13,30 @@
 <body>
   <header>
     <nav>
-      <h1><a href="/">Restaurant Reviews</a></h1>
+      <h1>
+        <a href="/">Restaurant Reviews</a>
+      </h1>
     </nav>
   </header>
-  <a href="#neighborhoods-select" class="skip-link">Skip to filter options</a> 
+  <a href="#neighborhoods-select" class="skip-link">Skip to filter options</a>
 
   <main id="maincontent">
-    <section id="map-container">
+    <section id="map-container" aria-labelledby="google-map" role="application">
       <div id="map" tabindex="-1"></div>
     </section>
+    <label id="google-map" class="google-map-description">Google Map</label>
     <section>
-        <div class="filter-options">
-          <h2 id="filter-results">Filter Results</h2>
+      <div class="filter-options">
+        <h2 id="filter-results">Filter Results</h2>
           <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
             <option value="all">All Neighborhoods</option>
           </select>
+          <label id="neighborhoods-filter" class="filters">Select neighborhoods</label>
           <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
             <option value="all">All Cuisines</option>
           </select>
-        </div>
+          <label id="cuisines-filter" class="filters">Select cuisines</label>
+      </div>
       <ul class="container" id="restaurants-list"></ul>
       <!-- <div class="container" id="restaurants-list"></div> -->
     </section>
@@ -39,13 +44,29 @@
 
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+
+  <script type="application/javascript" charset="utf-8" src="js/sw_register.js"></script>
   <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script> -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>
 
 
   <footer id="footer">
-    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+    Copyright (c) 2017
+    <a href="/">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved.
   </footer>
+  <!-- <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        // Registration was successful
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }).catch(function(err) {
+        // registration failed :(
+          console.log('ServiceWorker registration failed: ', err);
+        });
+    }
+  </script> -->
 
 </body>
 
