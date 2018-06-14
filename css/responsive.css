@@ -2,7 +2,7 @@ img, embed, object, video {
     max-width: 100%;
 }
 
-.container {
+.container, .filter-options {
     display: flex;
     flex-wrap: wrap;
     margin: auto;
@@ -19,18 +19,29 @@ img, embed, object, video {
     #restaurant-name, #reviews-container h2 {
         font-size: 16pt;
     }
+    .filter-options select, .filter-options h2 {
+        width: 80%;
+    }
 
 }
 @media screen and (min-width: 450px)  and (max-width: 589px){
 
-    .container {
+    .container, {
       width: 440px;
     }
+
+    .filter-options select {
+        width: 30%;
+    } 
 } 
 
 @media screen and (min-width: 590px) {
-    .box{
+    .box, {
       width: 42%;
+    }
+
+    .filter-options select{
+        width: 30%;
     }
 }
 
@@ -39,14 +50,6 @@ img, embed, object, video {
       width: 28%;
     }
 }
-
-
-@media screen and (min-width: 1200px) {
-
-    .container {
-      width: 1200px;   
-    }
-} 
 
 /* ===================== Restaurant review page ===================== */
 
@@ -72,9 +75,3 @@ img, embed, object, video {
     }
  
 }
-@media screen and (min-width: 1300px) {
-
-    .container1 {
-      width: 1300px;   
-    }
-} 
