@@ -16,7 +16,7 @@ img, embed, object, video {
     nav h1 a {
         font-size: 10pt;
     }
-    #restaurant-name, #reviews-container h2 {
+    #restaurant-name, #reviews-container h2, h3 {
         font-size: 16pt;
     }
     .filter-options select, .filter-options h2 {

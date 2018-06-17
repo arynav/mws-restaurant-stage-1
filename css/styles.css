@@ -281,7 +281,7 @@ nav h1 a {
 #reviews-container {
   padding: 30px 40px 80px;
 }
-#reviews-container h2 {
+#reviews-container h2, h3 {
   color: rgb(207, 99, 10);
   font-size: 24pt;
   font-weight: 300;
