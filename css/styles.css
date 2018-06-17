@@ -321,3 +321,7 @@ nav h1 a {
   padding: 0 20px 10px 0;
 }
 
+.google-map-description, .restaurant-information, .review-section {
+  display: none;
+}
+
