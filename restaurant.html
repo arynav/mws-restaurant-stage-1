@@ -18,17 +18,23 @@
   <header>
     <!-- Beginning nav -->
     <nav>
-      <h1><a href="/">Restaurant Reviews</a></h1>
+      <h1>
+        <a href="/">Restaurant Reviews</a>
+      </h1>
     </nav>
     <!-- Beginning breadcrumb -->
-    <ul id="breadcrumb" >
-      <li><a href="/">Home</a></li>
+
+    <ul id="breadcrumb" role="group">
+      <li>
+        <a href="/">Home</a>
+      </li>
     </ul>
+
     <!-- End breadcrumb -->
     <!-- End nav -->
   </header>
   <!-- End header -->
-  <a href="#restaurant-name" class="skip-link">Skip map navigation?</a> 
+  <a href="#restaurant-name" class="skip-link">Skip map navigation?</a>
 
   <!-- Beginning main -->
   <main id="maincontent">
@@ -42,15 +48,15 @@
     <section id="restaurant-container" aria-labelledby="restaurant-info" role="application">
       <h2 id="restaurant-name"></h2>
       <div class="container1">
-          <div class="r-box r-image">
-              <img id="restaurant-img">
-              <p id="restaurant-cuisine"></p>
-          </div>
-          <div class="r-box r-table">
-              <p id="restaurant-address"></p>
-              <table id="restaurant-hours"></table>
-          </div>
-      </div>            
+        <div class="r-box r-image">
+          <img id="restaurant-img">
+          <p id="restaurant-cuisine"></p>
+        </div>
+        <div class="r-box r-table">
+          <p id="restaurant-address"></p>
+          <table id="restaurant-hours"></table>
+        </div>
+      </div>
     </section>
     <label id="restaurant-info" class="restaurant-information">Restaurant Information</label>
     <!-- end restaurant -->
@@ -65,7 +71,10 @@
 
   <!-- Beginning footer -->
   <footer id="footer">
-    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+    Copyright (c) 2017
+    <a href="/">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved.
   </footer>
   <!-- End footer -->
 
