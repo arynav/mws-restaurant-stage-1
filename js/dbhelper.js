@@ -1,6 +1,7 @@
 /**
  * Common database helper functions.
  */
+
 class DBHelper {
 
   /**
@@ -8,27 +9,110 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+    // const port = 8000 // Change this to your server port
+    const port = 1337; // Change this to your server port
+
+    // return `http://localhost:${port}/data/restaurants.json`;
+    return `http://localhost:${port}/restaurants`;
+
+  }
+  static putData(data) {
+
+    let open = indexedDB.open("mws_db", 2);
+    open.onsuccess = function () {
+      // Start a new transaction
+      var db = open.result;
+      var tx = db.transaction("MyObjectStore", "readwrite");
+      var store = tx.objectStore("MyObjectStore");
+      var index = store.index("NameIndex");
+      // store.put({ id: 12345, name: { first: "John", last: "Doe" }, age: 42 });
+      // store.put({id: 0, data});
+      // store.put({ id: 0, restaurant: { data}});
+      data.forEach(function(e) {
+        var request = store.add(e);
+        request.onsuccess = function(event) {
+        console.log("added to indexDB: ", e);
+      };
+
+    });
+
+      tx.oncomplete = function () {
+        db.close();
+      };
+    };
+  }
+
+
+  static getData() {
+
+    let open = indexedDB.open("mws_db", 2);
+    open.onsuccess = function () {
+      // Start a new transaction
+      var db = open.result;
+      var tx = db.transaction("MyObjectStore", "readwrite");
+      var store = tx.objectStore("MyObjectStore");
+
+      var restaurants = [];
+
+      store.openCursor().onsuccess = function(event) {
+      var cursor = event.target.result;
+      if (cursor) {
+        restaurants.push(cursor.value);
+        cursor.continue();
+      }
+      else {
+        console.log("Gor all restaurants from dB: ", restaurants);
+        }
+      };
+
+      tx.oncomplete = function () {
+        db.close();
+      };
+      return restaurants;
+    };
   }
 
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
+
+    let fetchURL = DBHelper.DATABASE_URL;
+    console.log(fetchURL);
+    // fetch(fetchURL, {method: 'GET'})
+    //   .then(response => {
+    //     response.json()
+    //     .then(restaurants => {
+    //       console.log(`restaurants JSON ${restaurants}`);
+    //       callback(null, restaurants);
+    //     });
+    //   })
+    //   .catch(error => {
+    //     callback(`request failed to get restaurant url from db. getting: ${error}`, null);
+    //   });
+    console.log("We are online: ", navigator.onLine);
+
+    if(navigator.onLine) { 
+      fetch(fetchURL, { method: 'GET' })
+      .then(response => response.json())
+      .then(restaurants => {
+        // console.log('restaurants JSON', restaurants);
+        DBHelper.putData(restaurants);
+        console.log("Data pushed to indexDB.");
         callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
+      })
+      .catch(error => {
+        callback(`request failed to get restaurant url from db. getting: ${error}`, null);
+      });
+    } else {
+      console.log("We are OFFLINE.............");
+      const offlineData = DBHelper.getData();
+      callback(null, offlineData);
+    }
+
+    // const offlineData = DBHelper.getData();
+    // console.log("offlineData: ", offlineData);
+
   }
 
   /**
@@ -150,7 +234,9 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    // return (`/img/${restaurant.photograph}`);
+    return (`/img/${restaurant.photograph}.jpg`);
+
   }
 
   /**
@@ -162,7 +248,8 @@ class DBHelper {
       title: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant),
       map: map,
-      animation: google.maps.Animation.DROP}
+      animation: google.maps.Animation.DROP
+    }
     );
     return marker;
   }
