@@ -1,7 +1,12 @@
-var cacheName = 'mws-restaurant-v2';
+var cacheName = 'mws-restaurant-v10';
+var imgsCache = 'mws-restaurant-imgs-v2';
+var allCaches = [
+    cacheName,
+    imgsCache
+];
 
+// install service worker
 self.addEventListener('install', function (event) {
-    createDB();
 
     event.waitUntil(
         caches.open(cacheName).then(function (cache) {
@@ -24,92 +29,61 @@ self.addEventListener('install', function (event) {
         })
     );
 });
-
-self.addEventListener('fetch', function (event) {
-    console.log('Fetching:.......', event.request.url);
-    const checkURL = new URL(event.request.url);
-    event.respondWith(
-        caches.match(event.request).then(function (response) {
-
-            if (response) {
-                console.log('1. got some response:.......', response);
-                return response;
-            }
-            return fetch(event.request);
-        }
-        )
-    );
-});
-
-self.addEventListener('activate', function (event) {
-    var cacheWhitelist = cacheName;
-    event.waitUntil(
-        caches.keys().then(function (cacheNames) {
-            return Promise.all(
-                cacheNames.map(function (cache) {
-                    if (cacheWhitelist.indexOf(cache) === -1) {
-                        return caches.delete(cache);
-                    }
-                })
-            );
-        })
-    );
-});
-
-const createDB = () => {
-
-    // var db;
-    // var request = indexedDB.open("idbTest", 8);
-    // request.onerror = function(event) {
-    //     console.log("Database error: " + e.target.errorCode);
-    // };
-    // request.onsuccess = function(event) {
-    //     console.log("Database created");
-    //     db = event.target.result;
-    //     // var objectStore = db.createObjectStore("test", { keyPath: "myKey" });
-    // };
-
-    ///////////////////////////// test with indexedDB API
-    // Open (or create) the database
-    var open = indexedDB.open("mws_db", 2);
-
-    // Create the schema
-    open.onupgradeneeded = function () {
-        var db = open.result;
-        var store = db.createObjectStore("MyObjectStore", { keyPath: "id" });
-        var index = store.createIndex("NameIndex", ["name"]);
-    };
-
-    open.onsuccess = function () {
-        // Start a new transaction
-        var db = open.result;
-        var tx = db.transaction("MyObjectStore", "readwrite");
-        var store = tx.objectStore("MyObjectStore");
-        var index = store.index("NameIndex");
-
-        // // Add some data
-        store.put({ id: 12345, name: { first: "testtttttt", last: "Doe" }, age: 42 });
-        // store.put({ id: 67890, name: { first: "Bob", last: "Smith" }, age: 35 });
-
-        // // Query the data
-        // var getJohn = store.get(12345);
-        // var getBob = index.get(["Smith", "Bob"]);
-
-        // getJohn.onsuccess = function () {
-        //     console.log(getJohn.result.name.first);  // => "John"
-        // };
-
-        // getBob.onsuccess = function () {
-        //     console.log(getBob.result.name.first);   // => "Bob"
-        // };
-
-        // Close the db when the transaction is done
-        tx.oncomplete = function () {
-            db.close();
-        };
+// add events to cache
+self.addEventListener('fetch', function(event) {
+    var requestUrl = new URL(event.request.url);
+  
+    if (requestUrl.origin === location.origin) {
+      if (requestUrl.pathname === '/') {
+        event.respondWith(caches.match('/index.html'));
+        return;
+      }
+      if (requestUrl.pathname.endsWith('.jpg') || requestUrl.pathname.endsWith('.png')) {
+        event.respondWith(serveImg(event.request));
+        return;
+      }
     }
+    event.respondWith(
+      caches.match(event.request).then(function(response) {
+        return response || fetch(event.request);
+      }).catch(function(err) {       // fallback 
+          console.log("You are OFFLINE: ",err);
+          return;
 
+        })
+      
+    );
+  });
 
-}
-//////////////////// idb api /////////////////
+function serveImg(request) {
+    var storageUrl = request.url.replace(/-\d+px\.jpg$/, '');
+    return caches.open(imgsCache).then(function(cache) {
+      return cache.match(storageUrl).then(function(response) {
+
+        if (response) return response;
+        return fetch(request).then(function(networkResponse) {
+          cache.put(storageUrl, networkResponse.clone());
+          // console.log("networkResponse", networkResponse);
+          return networkResponse;
+        });
+      });
+    });
+};
+// activate service worker
+self.addEventListener('activate', function(event) {
+    console.log("sw is activated");
+    event.waitUntil(
+      caches.keys().then(function(cacheNames) {
+        return Promise.all(
+          cacheNames.filter(function(cacheName) {
+            return cacheName.startsWith('mws-') &&
+                   !allCaches.includes(cacheName);
+            }).map(function(cacheName) {
+                return caches.delete(cacheName);
+            })
+        );
+      })
+    );
+});
+
 
