@@ -237,7 +237,7 @@ nav h1 a {
 }
 
 #restaurant-name {
-  color: rgb(207, 99, 10);
+  color: rgb(133, 62, 4);
   font-family: Arial,sans-serif;
   font-size: 24pt;
   font-weight: 200;
@@ -257,7 +257,8 @@ nav h1 a {
 #restaurant-address {
   font-size: 12pt;
   margin: 10px 0px;
-  color: rgb(207, 99, 10);
+  /* color: rgb(207, 99, 10); */
+  color: rgb(39, 24, 12);
 }
 #restaurant-cuisine {
   background-color: #333;
@@ -282,7 +283,7 @@ nav h1 a {
   padding: 30px 40px 80px;
 }
 #reviews-container h2, h3 {
-  color: rgb(207, 99, 10);
+  color: rgb(104, 49, 4);
   font-size: 24pt;
   font-weight: 300;
   letter-spacing: -1px;

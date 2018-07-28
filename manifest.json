@@ -1,0 +1,12 @@
+{
+    "short_name": "Reviews",
+    "name": "MWS Udacity Restaurant Reviews Project",
+    "icons": [
+
+      { "src": "/img/mws.png", "type": "image/png", "sizes": "512x512" }
+    ],
+    "start_url": "index.html",
+    "background_color": "#202430",
+    "theme_color": "#202430",
+    "display": "fullscreen"
+  }

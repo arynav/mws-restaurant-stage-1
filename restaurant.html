@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <!-- Normalize.css for better cross-browser consistency -->
@@ -9,6 +9,9 @@
   <!-- Main CSS file -->
   <link rel="stylesheet" href="css/styles.css" type="text/css">
   <link rel="stylesheet" href="css/responsive.css">
+
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#202430"/>
 
   <title>Restaurant Info</title>
 </head>
@@ -80,10 +83,11 @@
 
   <!-- Beginning scripts -->
   <!-- Database helpers -->
+  <script type="application/javascript" charset="utf-8" src="js/sw_register.js"></script>
   <script type="text/javascript" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
   <!-- Google Maps -->
   <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBy-sOJ4HW8kVxlq5hdJ-kxtJB8lZODat4&libraries=places&callback=initMap"></script> -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>
