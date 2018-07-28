@@ -1,11 +1,12 @@
-</html>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#202430" />
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>Restaurant Reviews</title>
 </head>
@@ -28,27 +29,28 @@
     <section>
       <div class="filter-options">
         <h2 id="filter-results">Filter Results</h2>
-          <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
-            <option value="all">All Neighborhoods</option>
-          </select>
-          <label id="neighborhoods-filter" class="filters">Select neighborhoods</label>
-          <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
-            <option value="all">All Cuisines</option>
-          </select>
-          <label id="cuisines-filter" class="filters">Select cuisines</label>
+        <label for="neighborhoods-select" id="neighborhoods-filter" class="filters">Select neighborhoods</label>
+        <select aria-label="Neighborhoods" id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
+          <option label="All" value="all">All Neighborhoods</option>
+        </select>
+        <label for="cuisines-select" id="cuisines-filter" class="filters">Select cuisines</label>
+        <select aria-label="Cuisines" id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
+          <option label="All" value="all">All Cuisines</option>
+        </select>
       </div>
       <ul class="container" id="restaurants-list"></ul>
     </section>
   </main>
 
+  <!-- Beginning scripts -->
+  <script type="application/javascript" charset="utf-8" src="js/sw_register.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
-
-  <script type="application/javascript" charset="utf-8" src="js/sw_register.js"></script>
+  <!-- Google Maps -->
   <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script> -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"></script>
-
+  <!-- End scripts -->
 
   <footer id="footer">
     Copyright (c) 2017
