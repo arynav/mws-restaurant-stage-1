@@ -71,6 +71,28 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   fillReviewsHTML();
 }
 
+// Submit restaurant reviews
+
+document.getElementById("form-review").addEventListener("submit",(e) => submitReview(e)) 
+
+submitReview = (event) => {
+  event.preventDefault();
+
+  let reviewer_name = document.getElementById("reviewer-name").value;
+  let rating = document.getElementById("rating-form-select").selectedOptions[0].value;
+  let review_comments = document.getElementById("reviewer-comments").value;
+  // console.log(reviewer_name, rating, review_comments, self.restaurant.id)
+
+  const new_review= {
+    "restaurant_id": self.restaurant.id,
+    "name": reviewer_name,
+    "rating": rating,
+    "comments": review_comments
+  }
+  DBHelper.submitRestaurantReviews(new_review)
+}
+//
+
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
  */
@@ -95,6 +117,10 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+  console.log('all reviews: ', self.restaurant.reviews); // ONLY 3 OLD REVIEWS are returned, no new reviews??? 
+  // New reviews are stored in indexedDB and on the server: http://localhost:1337/reviews/?restaurant_id=2
+  // every time new review added, need to clear storage to clear cash and re-register sw ???
+  // after 'clear storage' if on restaurant page, getting: 'No reviews yet!' ==> need to refresh to get all latest reviews
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
@@ -125,7 +151,9 @@ createReviewHTML = (review) => {
 
   const date = document.createElement('p');
   date.setAttribute("id", "review-date-"+ review.name);
-  date.innerHTML = review.date;
+  const ts = new Date(review.createdAt);
+  date.innerHTML = ts.toDateString()
+  // date.innerHTML = review.createdAt;
   li.appendChild(date);
 
   const rating = document.createElement('p');
