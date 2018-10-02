@@ -47,6 +47,7 @@
     </section>
     <label id="google-map" class="google-map-description">Google Map</label>
     <!-- End map -->
+
     <!-- Beginning restaurant -->
     <section id="restaurant-container" aria-labelledby="restaurant-info" role="application">
       <h2 id="restaurant-name"></h2>
@@ -63,6 +64,34 @@
     </section>
     <label id="restaurant-info" class="restaurant-information">Restaurant Information</label>
     <!-- end restaurant -->
+
+    <!-- Add a form to allow users to submit their own reviews -->
+    <!-- begin restaurant review form -->
+    <section id="form-container">
+      <h2 id ="form-name">Add Restaurant Review</h2>
+        <form id ="form-review">  
+          <label for="reviewer-name">Reviewer Name:</label>
+        <!-- </br> -->
+          <input id="reviewer-name" name="name" type="text" />
+          <div class="form-container-review">
+            <p>Rating: </p>
+            <select aria-label="Rating form select" id="rating-form-select" name="Rating">
+              <option value ="1">1</option>
+              <option value ="2">2</option>
+              <option value ="3">3</option>
+              <option value ="4">4</option>
+              <option value ="5">5</option>
+            </select>
+          </div>
+          <label for="reviewer-comments">Reviewer Comments:</label>
+          <textarea id="reviewer-comments" name="comments"></textarea>
+        </br> 
+          <div id="review-form-error"></div>
+          <button class="review-submit-button" type="submit">Submit</button>
+        </form>
+    </section>
+    <!-- end restaurant review form -->
+
     <!-- Beginning reviews -->
     <section id="reviews-container" aria-labelledby="restaurant-review" role="application">
       <ul id="reviews-list"></ul>
