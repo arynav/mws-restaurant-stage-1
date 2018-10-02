@@ -16,6 +16,15 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
 
   }
+
+  static get DATABASE_URL_REVIEWS() {
+    // const port = 8000 // Change this to your server port
+    const port = 1337; // Change this to your server port
+
+    // return `http://localhost:${port}/data/restaurants.json`;
+    return `http://localhost:${port}/reviews/`;
+
+  }
   // create indexDB
   static get dbPromise() {
 		if (!navigator.serviceWorker) {
@@ -26,10 +35,24 @@ class DBHelper {
 				
 			});
 		}
-	}
+  }
+  
+  static submitRestaurantReviews(review){
+    // add new review
+    fetch('http://localhost:1337/reviews/', {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(review)
+
+    })
+    .then(response => response.json())
+    .catch(error => console.error("Failed to add review", review.id, review.name))
+    .then(response => console.log(response));
+    
+  }
 
   /**
-   * Fetch all restaurants.
+   * Fetch all restaurants and it's reviews.
    */
   static fetchRestaurants(callback) {
 		DBHelper.dbPromise.then(db => {
@@ -40,17 +63,30 @@ class DBHelper {
 			store.getAll().then(results => {
 				if (results.length === 0) {
 					// if no restaurants in IDB: fetch restaurants from network
-					fetch(`${DBHelper.DATABASE_URL}`)
+          fetch(`${DBHelper.DATABASE_URL}`)
 					.then(response => {
 						return response.json();
 					})
 					.then(restaurants => {
-						// adding fetched restaurants into IDB
-						const tx = db.transaction('restaurants', 'readwrite');
-						const store = tx.objectStore('restaurants');
-						restaurants.forEach(restaurant => {
-							store.put(restaurant);
-						})
+          //update restaurants
+            restaurants.forEach(restaurant => {
+              //fetch restaurant reviews
+              fetch(`${DBHelper.DATABASE_URL_REVIEWS}?restaurant_id=${restaurant.id}` )
+              .then(response => {
+                return response.json();
+              })
+              .then(reviews =>  {
+                restaurant.reviews = reviews;
+
+                 //add restaurant and  reviews to db
+                const tx = db.transaction('restaurants', 'readwrite');
+                const store = tx.objectStore('restaurants');
+                // console.log(restaurant)
+                store.put(restaurant);
+              })
+
+            })
+
 						callback(null, restaurants);
 					})
 					.catch(error => {
