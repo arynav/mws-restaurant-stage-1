@@ -50,6 +50,24 @@ class DBHelper {
     .then(response => console.log(response));
     
   }
+  //update restaurant.is_favorite to true/false in idb 
+  static updateFavStatus(restaurant_id, favStatus){
+    fetch(`${DBHelper.DATABASE_URL}/${restaurant_id}/?favStatus=${favStatus}`, {
+      method: "PUT"
+    })
+    .then(() => {
+      DBHelper.dbPromise
+      .then(db => {
+        const tx = db.transaction('restaurants', 'readwrite');
+        const store = tx.objectStore('restaurants');
+        store.get(restaurant_id)
+        .then(restaurant => {
+          restaurant.is_favorite = favStatus;
+          store.put(restaurant);
+        });
+      })
+    })
+  }
 
   /**
    * Fetch all restaurants and it's reviews.

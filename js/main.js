@@ -157,6 +157,27 @@ createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
+  // add favorite toggle
+  const fav_toggle = document.createElement('button');
+  fav_toggle.className = 'fav-toggle-button';
+  fav_toggle.innerHTML = '&#10084;'
+  fav_toggle.style.backgroundColor = '#FAF7F4';
+  fav_toggle.style.color = '#575454';
+  fav_toggle.style.padding = '4px';
+
+  fav_toggle.onclick = function(){
+    //invert favStatus
+    const favStatus = !restaurant.is_favorite; //
+    console.log("onclick favStatus: ", favStatus);
+    //update idb with inverted favStatus
+    DBHelper.updateFavStatus(restaurant.id, favStatus); //
+    console.log("idb updated to favStatus: ", favStatus);
+    restaurant.is_favorite = !restaurant.is_favorite;
+    toggleFav(fav_toggle, restaurant.is_favorite);
+  }
+  toggleFav(fav_toggle, restaurant.is_favorite);
+  li.append(fav_toggle);
+
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
   li.append(neighborhood);
@@ -167,11 +188,23 @@ createRestaurantHTML = (restaurant) => {
 
   const more = document.createElement('button');
   more.innerHTML = 'View Details';
-  // more.href = DBHelper.urlForRestaurant(restaurant);
   more.onclick = function() { location.href=DBHelper.urlForRestaurant(restaurant); };
   li.append(more)
 
   return li
+}
+//toggle favStatus color and aria labels
+toggleFav = (fav, favStatus) => {
+  // if !favStatus , update aria label and color to orange
+  if (favStatus){
+    fav.setAttribute('aria-label', 'set to favorite');
+    fav.style.color = '#CF630A';
+  }
+  // if favStatus , update aria label and color to gray
+  else {
+    fav.setAttribute('aria-label', 'not my favorite');
+    fav.style.color = '#575454';
+  }
 }
 
 /**
