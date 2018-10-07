@@ -52,7 +52,7 @@ class DBHelper {
   }
   //update restaurant.is_favorite to true/false in idb 
   static updateFavStatus(restaurant_id, favStatus){
-    fetch(`${DBHelper.DATABASE_URL}/${restaurant_id}/?favStatus=${favStatus}`, {
+    fetch(`${DBHelper.DATABASE_URL}/${restaurant_id}/?is_favorite=${favStatus}`, {
       method: "PUT"
     })
     .then(() => {
@@ -67,6 +67,7 @@ class DBHelper {
         });
       })
     })
+    console.log("server is updated with is_favorite to: ", favStatus);
   }
 
   /**

@@ -169,9 +169,8 @@ createRestaurantHTML = (restaurant) => {
     //invert favStatus
     const favStatus = !restaurant.is_favorite; //
     console.log("onclick favStatus: ", favStatus);
-    //update idb with inverted favStatus
+    //update is_favorite on the server with inverted favStatus
     DBHelper.updateFavStatus(restaurant.id, favStatus); //
-    console.log("idb updated to favStatus: ", favStatus);
     restaurant.is_favorite = !restaurant.is_favorite;
     toggleFav(fav_toggle, restaurant.is_favorite);
   }
