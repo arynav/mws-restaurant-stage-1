@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchCuisines();
 });
 
+window.addEventListener('online',  (event) => {
+  DBHelper.sendOfflineReviews();
+});
+
 /**
  * Fetch all neighborhoods and set their HTML.
  */

@@ -36,10 +36,35 @@ class DBHelper {
 			});
 		}
   }
+
+  //store reviews on local storage
+  static storeOffline(review){
+    console.log("offline",review);
+    
+    let  offline_reviews = JSON.parse(localStorage.getItem("offline_reviews"));
+    if (offline_reviews === null){
+      offline_reviews = [];
+    }
+    offline_reviews.push(review);
+    localStorage.setItem("offline_reviews", JSON.stringify(offline_reviews))
+  }
+  
+  //check if online, then send reviews to submitRestaurantReviews, to store on the server
+  static sendOfflineReviews(){
+    console.log("hello from sendOfflineReviews")
+    let  offline_reviews = JSON.parse(localStorage.getItem("offline_reviews"));
+    if (offline_reviews === null){
+      offline_reviews = [];
+    }
+    if (offline_reviews.length > 0){
+      offline_reviews.forEach((review) => DBHelper.submitRestaurantReviews(review)); 
+    }
+    localStorage.removeItem("offline_reviews");
+  }
   
   static submitRestaurantReviews(review){
     // add new review
-    fetch('http://localhost:1337/reviews/', {
+    return fetch('http://localhost:1337/reviews/', {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(review)
@@ -47,8 +72,7 @@ class DBHelper {
     })
     .then(response => response.json())
     .catch(error => console.error("Failed to add review", review.id, review.name))
-    .then(response => console.log(response));
-    
+    .then(response => console.log(response));    
   }
   //update restaurant.is_favorite to true/false in idb 
   static updateFavStatus(restaurant_id, favStatus){
@@ -78,9 +102,14 @@ class DBHelper {
 			if (!db) return;
 			// check restaurants in IDB
 			const tx = db.transaction('restaurants');
-			const store = tx.objectStore('restaurants');
+      const store = tx.objectStore('restaurants');
 			store.getAll().then(results => {
-				if (results.length === 0) {
+        if(!navigator.onLine){
+          callback(null, results);
+          return;
+        }
+        // console.log("getting all results: ",JSON.stringify(results))
+				// if (results.length === 0) {
 					// if no restaurants in IDB: fetch restaurants from network
           fetch(`${DBHelper.DATABASE_URL}`)
 					.then(response => {
@@ -88,9 +117,10 @@ class DBHelper {
 					})
 					.then(restaurants => {
           //update restaurants
+            const all_r_info =  [];
             restaurants.forEach(restaurant => {
               //fetch restaurant reviews
-              fetch(`${DBHelper.DATABASE_URL_REVIEWS}?restaurant_id=${restaurant.id}` )
+              const r_info = fetch(`${DBHelper.DATABASE_URL_REVIEWS}?restaurant_id=${restaurant.id}` )
               .then(response => {
                 return response.json();
               })
@@ -103,21 +133,24 @@ class DBHelper {
                 // console.log(restaurant)
                 store.put(restaurant);
               })
+              all_r_info.push(r_info);
 
             })
+            Promise.all(all_r_info).then(()=> {
+              callback(null, restaurants);
+            })
 
-						callback(null, restaurants);
 					})
 					.catch(error => {
             // return error if unable to fetch from network
             // console.log("unable to fetch from network");
 						callback(error, null);
 					});
-				} else {
+				// } else {
           // getting restaurants from IDB
           // console.log("getting restaurants from IDB " , results);
-					callback(null, results);
-				}
+					// callback(null, results);
+				// }
 			})
 			
 		});
@@ -129,11 +162,14 @@ class DBHelper {
   static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
     DBHelper.fetchRestaurants((error, restaurants) => {
+
       if (error) {
         console.log("can't get restaurant by id");
         callback(error, null);
       } else {
         // console.log("got all restaurants: ", restaurants);
+        // console.log('dbHelper self.restaurant: ', JSON.stringify(restaurants[0]));
+
         const restaurant = restaurants.find(r => r.id == id);
         // console.log("found restaurant by id from fetchRestaurantById: ",id, restaurant);
 

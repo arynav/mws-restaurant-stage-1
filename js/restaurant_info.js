@@ -24,10 +24,10 @@ window.initMap = () => {
  * Get current restaurant from page URL.
  */
 fetchRestaurantFromURL = (callback) => {
-  if (self.restaurant) { // restaurant already fetched!
-    callback(null, self.restaurant)
-    return;
-  }
+  // if (self.restaurant) { // restaurant already fetched!
+  //   callback(null, self.restaurant)
+  //   return;
+  // }
   const id = getParameterByName('id');
   if (!id) { // no id found in URL
     error = 'No restaurant id in URL'
@@ -49,6 +49,7 @@ fetchRestaurantFromURL = (callback) => {
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
+  
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
@@ -74,6 +75,9 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 // Submit restaurant reviews
 
 document.getElementById("form-review").addEventListener("submit",(e) => submitReview(e)) 
+window.addEventListener('online',  (event) => {
+  DBHelper.sendOfflineReviews();
+});
 
 submitReview = (event) => {
   event.preventDefault();
@@ -89,7 +93,23 @@ submitReview = (event) => {
     "rating": rating,
     "comments": review_comments
   }
-  DBHelper.submitRestaurantReviews(new_review)
+  //check if offline, then store reviews to local storage
+  if(!navigator.onLine){
+    console.log("offline, sending review to localStorage");
+    DBHelper.storeOffline(new_review);
+    return;
+  }
+  DBHelper.submitRestaurantReviews(new_review);
+  // DBHelper.submitRestaurantReviews(new_review)
+  // .then(() => {
+  //   fetchRestaurantFromURL(() => {
+  //     // fillReviewsHTML();
+  //   });
+  //   // fetchRestaurantFromURL();
+  // })
+
+  document.getElementById("reviewer-name").value = '';
+  document.getElementById("reviewer-comments").value = '';
 }
 //
 
@@ -117,11 +137,11 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-  console.log('all reviews: ', self.restaurant.reviews); // ONLY 3 OLD REVIEWS are returned, no new reviews??? 
-  // New reviews are stored in indexedDB and on the server: http://localhost:1337/reviews/?restaurant_id=2
-  // every time new review added, need to clear storage to clear cash and re-register sw ???
-  // after 'clear storage' if on restaurant page, getting: 'No reviews yet!' ==> need to refresh to get all latest reviews
+  // console.log('all reviews: ', self.restaurant.reviews); 
+  // console.log('self.restaurant: ', JSON.stringify(self.restaurant));
+  
   const container = document.getElementById('reviews-container');
+  // container.innerHTML = '';
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
